@@ -3,11 +3,19 @@ using System.Diagnostics.CodeAnalysis;
 namespace Brimborium.ReturnValue;
 
 public enum ResultMode { Success, Error }
+
 public class Result<T>
 {
     public readonly ResultMode Mode;
-    public readonly T? Value;
-    public readonly Exception? Error;
+    [AllowNull] public readonly T Value;
+    [AllowNull] public readonly Exception Error;
+
+    public Result()
+    {
+        Mode = ResultMode.Error;
+        Value = default(T);
+        Error = UninitializedException.Instance;
+    }
 
     public Result(T Value)
     {
@@ -23,6 +31,21 @@ public class Result<T>
         this.Error = error;
     }
 
+    public void Deconstruct(out ResultMode mode, out T? value, out Exception? error)
+    {
+        mode = this.Mode;
+
+        if (this.Mode == ResultMode.Success)
+        {
+            value = this.Value;
+            error = default;
+        } else
+        {
+            value = default;
+            error = this.Error;
+        }
+    }
+
     public bool TryGet(
         [MaybeNullWhen(false)] out T value,
         [MaybeNullWhen(true)] out Exception error)
@@ -30,10 +53,9 @@ public class Result<T>
         if (this.Mode == ResultMode.Success)
         {
             value = this.Value!;
-            error=default;
+            error = default;
             return true;
-        }
-        else
+        } else
         {
             value = default;
             error = this.Error!;
@@ -47,8 +69,7 @@ public class Result<T>
         {
             value = this.Value!;
             return true;
-        }
-        else
+        } else
         {
             value = default;
             return false;
@@ -61,12 +82,10 @@ public class Result<T>
         {
             error = this.Error!;
             return true;
-        }
-        else
+        } else
         {
             error = default;
             return false;
         }
     }
-
 }
