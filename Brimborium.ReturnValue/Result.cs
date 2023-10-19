@@ -1,91 +1,61 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.ComponentModel;
 
 namespace Brimborium.ReturnValue;
+public static class Result {
+    public static NoValue NoValue => new NoValue();
 
-public enum ResultMode { Success, Error }
+    public static SuccessValue<T> AsSuccessValue<T>(this T value) => new SuccessValue<T>(value);
 
-public class Result<T>
-{
-    public readonly ResultMode Mode;
-    [AllowNull] public readonly T Value;
-    [AllowNull] public readonly Exception Error;
+    public static ErrorValue AsErrorValue(this Exception error) => new ErrorValue(error);
 
-    public Result()
-    {
-        Mode = ResultMode.Error;
-        Value = default(T);
-        Error = UninitializedException.Instance;
-    }
+    public static Result<T> AsResult<T>(this T value)
+        => new Result<T>(value);
 
-    public Result(T Value)
-    {
-        this.Mode = ResultMode.Success;
-        this.Value = Value;
-        this.Error = default;
-    }
+    public static Result<T> AsResult<T>(this SuccessValue<T> value)
+        => new Result<T>(value.Value);
 
-    public Result(Exception error)
-    {
-        this.Mode = ResultMode.Error;
-        this.Value = default;
-        this.Error = error;
-    }
-
-    public void Deconstruct(out ResultMode mode, out T? value, out Exception? error)
-    {
-        mode = this.Mode;
-
-        if (this.Mode == ResultMode.Success)
-        {
-            value = this.Value;
-            error = default;
-        } else
-        {
-            value = default;
-            error = this.Error;
+    public static Result<T> AsResult<T>(this OptionalResult<T> value) {
+        if (value.TryGetSuccess(out var successValue)) {
+            return new Result<T>(successValue);
+        } else if (value.TryGetError(out var errorValue)) {
+            return new Result<T>(errorValue);
+        } else if (value.TryGetNoValue()) {
+            return new Result<T>(new UninitializedException());
+        } else {
+            return new Result<T>(new UninitializedException());
         }
     }
+    
 
-    public bool TryGet(
-        [MaybeNullWhen(false)] out T value,
-        [MaybeNullWhen(true)] out Exception error)
-    {
-        if (this.Mode == ResultMode.Success)
-        {
-            value = this.Value!;
-            error = default;
-            return true;
-        } else
-        {
-            value = default;
-            error = this.Error!;
-            return false;
-        }
-    }
+    public static Result<T> AsResult<T>(this Exception error)
+        => new Result<T>(error);
 
-    public bool TryGetSuccess([MaybeNullWhen(false)] out T value)
-    {
-        if (this.Mode == ResultMode.Success)
-        {
-            value = this.Value!;
-            return true;
-        } else
-        {
-            value = default;
-            return false;
-        }
-    }
+    public static Result<T> AsResult<T>(this ErrorValue value)
+        => new Result<T>(value.Error);
 
-    public bool TryGetError([MaybeNullWhen(false)] out Exception error)
-    {
-        if (this.Mode == ResultMode.Error)
-        {
-            error = this.Error!;
-            return true;
-        } else
-        {
-            error = default;
-            return false;
+
+    public static OptionalResult<T> AsOptionalResult<T>(this NoValue value)
+        => new OptionalResult<T>();
+
+    public static OptionalResult<T> AsOptionalResult<T>(this T value)
+        => new OptionalResult<T>(value);
+
+    public static OptionalResult<T> AsOptionalResult<T>(this SuccessValue<T> value) 
+        => new OptionalResult<T>(value.Value);
+
+    public static OptionalResult<T> AsOptionalResult<T>(this Exception value)
+        => new OptionalResult<T>(value);
+
+    public static OptionalResult<T> AsOptionalResult<T>(this ErrorValue value)
+        => new OptionalResult<T>(value.Error);
+
+    public static OptionalResult<T> AsOptionalResult<T>(this Result<T> value) {
+        if (value.TryGetSuccess(out var successValue)) {
+            return new OptionalResult<T>(successValue);
+        } else if (value.TryGetError(out var errorValue)) {
+            return new OptionalResult<T>(errorValue);
+        } else {
+            return new OptionalResult<T>(new InvalidEnumArgumentException($"Invalid enum {value.Mode}."));
         }
     }
 }

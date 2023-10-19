@@ -25,11 +25,41 @@ public class OptionalTest
         }
     }
 
-
     [Fact]
     public void Optional03_Success()
     {
         var o = new Optional<string>();
         Assert.Equal(OptionalMode.NoValue, o.Mode);
+    }
+
+    [Fact]
+    public void Optional04_Mode() {
+        var o1 = new Optional<string>(OptionalMode.NoValue, null);
+        Assert.Equal(OptionalMode.NoValue, o1.Mode);
+
+        var o2 = new Optional<string>(OptionalMode.Success, "42");
+        Assert.Equal(OptionalMode.Success, o2.Mode);
+        Assert.Equal("42", o2.Value);
+
+        Assert.Equal("21", o1.GetValueOrDefault("21"));
+        Assert.Equal("42", o2.GetValueOrDefault("21"));
+    }
+
+    [Fact]
+    public void Optional05_TypeCast() {
+        Optional<string> o1 = NoValue.Instance;
+        Assert.Equal(OptionalMode.NoValue, o1.Mode);
+
+        Optional<string> o2 = "42";        
+        Assert.Equal(OptionalMode.Success, o2.Mode);
+        Assert.Equal("42", o2.Value);
+        Assert.Equal("42", o2.GetValueOrDefault("21"));
+    }
+
+
+    [Fact]
+    public void Optional06_EmptyCtor() {
+        Optional<string> o1 = new();
+        Assert.Equal(OptionalMode.NoValue, o1.Mode);
     }
 }

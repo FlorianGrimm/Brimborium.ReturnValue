@@ -1,10 +1,7 @@
 
-using System.ComponentModel;
-
 namespace Brimborium.ReturnValue;
 
-public record NoValue
-{
+public record NoValue {
     public NoValue() { }
 
     public static NoValue Instance => new NoValue();
@@ -17,4 +14,5 @@ public record NoValue
 
     public Optional<T> ToOptional<T>() => new Optional<T>();
 
+    public SuccessValue<T> WithValue<T>(T value) => new SuccessValue<T>(value);
 }

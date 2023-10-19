@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace Brimborium.ReturnValue;
+﻿namespace Brimborium.ReturnValue;
 
 [Serializable]
 public sealed class UninitializedException : Exception
