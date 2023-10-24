@@ -28,6 +28,13 @@ public struct OptionalResult<T> {
         this.Error = error;
     }
 
+    [JsonConstructor]
+    public OptionalResult(OptionalResultMode mode,[AllowNull] T value,[AllowNull] Exception error) {
+        this.Mode = mode;
+        this.Value = value;
+        this.Error = error;
+    }
+
     public void Deconstruct(out OptionalResultMode mode, out T? value, out Exception? error) {
         switch (this.Mode) {
             case OptionalResultMode.Success:

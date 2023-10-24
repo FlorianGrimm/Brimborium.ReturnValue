@@ -37,7 +37,7 @@ public class ResultOfTTest
         var (e, f, g) = r;
         Assert.Equal(ResultMode.Error, e);
         Assert.Equal(0, f);
-        Assert.Equal("abc", g.Message);
+        Assert.Equal("abc", g?.Message);
     }
 
     [Fact]
