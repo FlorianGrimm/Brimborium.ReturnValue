@@ -74,10 +74,9 @@ public readonly struct Optional<T>
 
     public static implicit operator Optional<T>(T value) => new Optional<T>(value);
 
-}
+    public static implicit operator bool(Optional<T> that) => that.Mode == OptionalMode.Success;
+    public static bool operator true(Optional<T> that) => that.Mode == OptionalMode.Success;
+    public static bool operator false(Optional<T> that) => that.Mode != OptionalMode.Success;
+    public static explicit operator T(Optional<T> that) => (that.Mode == OptionalMode.Success) ? that.Value : throw new InvalidCastException();
 
-public static class Optional {
-    public static Optional<T> ToOptional<T>(this T value) {
-        return new Optional<T>(value);
-    }
 }

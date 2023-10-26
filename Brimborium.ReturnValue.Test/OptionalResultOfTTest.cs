@@ -55,7 +55,7 @@ public class OptionalResultOfTTest {
 
             Assert.Equal(OptionalResultMode.Error, m);
             Assert.Equal(0, v);
-            Assert.Equal("gna", e?.Message);             
+            Assert.Equal("gna", e?.Message);
         }
     }
 
@@ -82,10 +82,9 @@ public class OptionalResultOfTTest {
 
     }
 
-    
     [Fact]
     public void OptionalResultOfTTest04_Json() {
-        { 
+        {
             OptionalResult<int> or1 = new OptionalResult<int>();
 
             var json1 = System.Text.Json.JsonSerializer.Serialize(or1);
@@ -117,5 +116,52 @@ public class OptionalResultOfTTest {
             Assert.NotNull(ro3.Error);
         }
     }
-    
+
+    [Fact]
+    public void OptionalResultOfTTest05_IfSuccess() {
+        var r = new OptionalResult<int>(7);
+        var b = r.If(7, static (v, a) => v == a);
+        Assert.True(b);
+        Assert.True(b.TryGetSuccess(out var act) && act == 7);
+    }
+
+    [Fact]
+    public void OptionalResultOfTTest06_IfFail() {
+        var r = new OptionalResult<int>(5);
+        var b = r.If(7, static (v, a) => v == a);
+        Assert.False(b);
+        Assert.True(b.TryGetNoValue());
+    }
+    [Fact]
+    public void OptionalResultOfTTest07_OrDefaultWithNoValue() {
+        var r = new OptionalResult<int>();
+        var b = r.OrDefault(6, (a) => a * 7);
+        Assert.True(b);
+        Assert.True(b.TryGetSuccess(out var act) && act == 42);
+    }
+
+    [Fact]
+    public void OptionalResultOfTTest07_OrDefaultWithValue() {
+        var r = new OptionalResult<int>(21);
+        var b = r.OrDefault(6, (a) => a * 7);
+        Assert.True(b);
+        Assert.True(b.TryGetSuccess(out var act) && act == 21);
+    }
+
+    [Fact]
+    public void OptionalResultOfTTest08_TryNoError() {
+        var r = new OptionalResult<int>(21);
+        var b = r.Try(1, static (v, a) => { return v * a; });
+        Assert.True(b);
+        Assert.True(b.TryGetSuccess(out var act) && act == 21);
+    }
+
+
+    [Fact]
+    public void OptionalResultOfTTest08_TryNoError() {
+        var r = new OptionalResult<int>(21);
+        var b = r.Try(1, static (v, a) => { throw new ArgumentException("gna"); });
+        Assert.False(b);
+        Assert.False(b.TryGetError(out var act) && act is ArgumentException);
+    }
 }
