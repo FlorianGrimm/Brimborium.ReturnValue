@@ -1,6 +1,5 @@
-﻿using System.ComponentModel;
+﻿namespace Brimborium.ReturnValue;
 
-namespace Brimborium.ReturnValue;
 public static class Result {
     public static NoValue NoValue => new NoValue();
 
@@ -31,7 +30,7 @@ public static class Result {
         => new Result<T>(error);
 
     public static Result<T> AsResult<T>(this ErrorValue value)
-        => new Result<T>(value.Error);
+        => new Result<T>(value);
 
 
     public static OptionalResult<T> AsOptionalResult<T>(this NoValue value)
@@ -47,7 +46,7 @@ public static class Result {
         => new OptionalResult<T>(value);
 
     public static OptionalResult<T> AsOptionalResult<T>(this ErrorValue value)
-        => new OptionalResult<T>(value.Error);
+        => new OptionalResult<T>(value);
 
     public static OptionalResult<T> AsOptionalResult<T>(this Result<T> value) {
         if (value.TryGetSuccess(out var successValue)) {

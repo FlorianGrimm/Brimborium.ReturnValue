@@ -5,12 +5,12 @@ public enum ResultMode { Success, Error }
 public class Result<T> {
     public readonly ResultMode Mode;
     [AllowNull] public readonly T Value;
-    [AllowNull] public readonly Exception Error;
+    [AllowNull] public readonly ErrorValue Error;
 
     public Result() {
         Mode = ResultMode.Error;
         Value = default(T);
-        Error = UninitializedException.Instance;
+        Error = ErrorValue.Uninitialized;
     }
 
     public Result(T Value) {
@@ -19,13 +19,13 @@ public class Result<T> {
         this.Error = default;
     }
 
-    public Result(Exception error) {
+    public Result(ErrorValue error) {
         this.Mode = ResultMode.Error;
         this.Value = default;
         this.Error = error;
     }
 
-    public void Deconstruct(out ResultMode mode, out T? value, out Exception? error) {
+    public void Deconstruct(out ResultMode mode, out T? value, out OptionalErrorValue error) {
         mode = this.Mode;
 
         if (this.Mode == ResultMode.Success) {
@@ -39,7 +39,7 @@ public class Result<T> {
 
     public bool TryGet(
         [MaybeNullWhen(false)] out T value,
-        [MaybeNullWhen(true)] out Exception error) {
+        [MaybeNullWhen(true)] out ErrorValue error) {
         if (this.Mode == ResultMode.Success) {
             value = this.Value!;
             error = default;
@@ -61,7 +61,7 @@ public class Result<T> {
         }
     }
 
-    public bool TryGetError([MaybeNullWhen(false)] out Exception error) {
+    public bool TryGetError([MaybeNullWhen(false)] out ErrorValue error) {
         if (this.Mode == ResultMode.Error) {
             error = this.Error!;
             return true;
@@ -73,11 +73,11 @@ public class Result<T> {
 
     public Result<T> WithValue(T value) => new Result<T>(value);
 
-    public Result<T> WithError(Exception error) => new Result<T>(error);
+    public Result<T> WithError(ErrorValue error) => new Result<T>(error);
 
     public static implicit operator Result<T>(T value) => new Result<T>(value);
-    public static implicit operator Result<T>(Exception error) => new Result<T>(error);
+    public static implicit operator Result<T>(Exception error) => new Result<T>(new ErrorValue(error, null, false));
 
     public static implicit operator Result<T>(SuccessValue<T> successValue) => new Result<T>(successValue);
-    public static implicit operator Result<T>(ErrorValue errorValue) => new Result<T>(errorValue.Error);
+    public static implicit operator Result<T>(ErrorValue errorValue) => new Result<T>(errorValue);
 }

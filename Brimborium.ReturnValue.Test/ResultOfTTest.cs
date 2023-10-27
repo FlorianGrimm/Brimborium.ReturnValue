@@ -17,7 +17,7 @@ public class ResultOfTTest
         var (e, f, g) = r;
         Assert.Equal(ResultMode.Success, e);
         Assert.Equal(42, f);
-        Assert.Null(g);
+        Assert.Null(g.Exception);
 
     }
 
@@ -29,15 +29,15 @@ public class ResultOfTTest
 
         Assert.False(r.TryGetSuccess(out var a));
         Assert.True(r.TryGetError(out var b));
-        Assert.Equal("abc", b.Message);
+        Assert.Equal("abc", b.Exception.Message);
 
         Assert.False(r.TryGet(out var c, out var d));
-        Assert.Equal("abc", d.Message);
+        Assert.Equal("abc", d.Exception.Message);
 
         var (e, f, g) = r;
         Assert.Equal(ResultMode.Error, e);
         Assert.Equal(0, f);
-        Assert.Equal("abc", g?.Message);
+        Assert.Equal("abc", g.Exception?.Message);
     }
 
     [Fact]
@@ -47,7 +47,7 @@ public class ResultOfTTest
         var (a, b, c) = act;
         Assert.Equal(ResultMode.Error, a);
         Assert.Null(b);
-        Assert.IsType<UninitializedException>(c);
+        Assert.IsType<UninitializedException>(c.Exception);
     }
 
 }

@@ -2,48 +2,42 @@
 
 public enum OptionalResultMode { NoValue, Success, Error }
 
-public struct OptionalResult<T>
-{
+public struct OptionalResult<T> {
     [JsonInclude]
     public readonly OptionalResultMode Mode;
     [JsonInclude]
     [AllowNull] public readonly T Value;
     [JsonInclude]
-    [AllowNull] public readonly Exception Error;
+    [AllowNull] public readonly ErrorValue Error;
 
-    public OptionalResult()
-    {
+    public OptionalResult() {
         this.Mode = OptionalResultMode.NoValue;
         this.Value = default;
         this.Error = default;
     }
 
-    public OptionalResult(T Value)
-    {
+    public OptionalResult(T Value) {
         this.Mode = OptionalResultMode.Success;
         this.Value = Value;
         this.Error = default;
     }
 
-    public OptionalResult(Exception error)
-    {
+    public OptionalResult(ErrorValue error) {
         this.Mode = OptionalResultMode.Error;
         this.Value = default;
         this.Error = error;
     }
 
     [JsonConstructor]
-    public OptionalResult(OptionalResultMode mode, [AllowNull] T value, [AllowNull] Exception error)
-    {
+    public OptionalResult(OptionalResultMode mode, [AllowNull] T value, [AllowNull] ErrorValue error) {
         this.Mode = mode;
         this.Value = value;
         this.Error = error;
     }
 
-    public void Deconstruct(out OptionalResultMode mode, out T? value, out Exception? error)
-    {
-        switch (this.Mode)
-        {
+    // TODO: better?    OptionalErrorValue
+    public void Deconstruct(out OptionalResultMode mode, out T? value, out OptionalErrorValue error) {
+        switch (this.Mode) {
             case OptionalResultMode.Success:
                 mode = OptionalResultMode.Success;
                 value = this.Value;
@@ -62,49 +56,34 @@ public struct OptionalResult<T>
         }
     }
 
-    public bool TryGetNoValue()
-    {
-        if (this.Mode == OptionalResultMode.NoValue)
-        {
+    public bool TryGetNoValue() {
+        if (this.Mode == OptionalResultMode.NoValue) {
             return true;
-        }
-        else if (this.Mode == OptionalResultMode.Success)
-        {
+        } else if (this.Mode == OptionalResultMode.Success) {
             return false;
-        }
-        else if (this.Mode == OptionalResultMode.Error)
-        {
+        } else if (this.Mode == OptionalResultMode.Error) {
             return false;
-        }
-        else
-        {
+        } else {
             return true;
         }
     }
 
-    public bool TryGetSuccess([MaybeNullWhen(false)] out T value)
-    {
-        if (this.Mode == OptionalResultMode.Success)
-        {
+    public bool TryGetSuccess([MaybeNullWhen(false)] out T value) {
+        if (this.Mode == OptionalResultMode.Success) {
             value = this.Value!;
             return true;
-        }
-        else
-        {
+        } else {
             value = default;
             return false;
         }
     }
 
-    public bool TryGetError([MaybeNullWhen(false)] out Exception error)
-    {
-        if (this.Mode == OptionalResultMode.Error)
-        {
+    public bool TryGetError([MaybeNullWhen(false)] out ErrorValue error) {
+        if (this.Mode == OptionalResultMode.Error) {
+            System.Diagnostics.Debug.Assert(this.Error.Exception is not null);
             error = this.Error!;
             return true;
-        }
-        else
-        {
+        } else {
             error = default;
             return false;
         }
@@ -114,14 +93,14 @@ public struct OptionalResult<T>
 
     public OptionalResult<T> WithValue(T value) => new OptionalResult<T>(value);
 
-    public OptionalResult<T> WithError(Exception error) => new OptionalResult<T>(error);
+    public OptionalResult<T> WithError(ErrorValue error) => new OptionalResult<T>(error);
 
 
     public static implicit operator bool(OptionalResult<T> that) => that.Mode == OptionalResultMode.Success;
     public static bool operator true(OptionalResult<T> that) => that.Mode == OptionalResultMode.Success;
     public static bool operator false(OptionalResult<T> that) => that.Mode != OptionalResultMode.Success;
     public static explicit operator T(OptionalResult<T> that) => (that.Mode == OptionalResultMode.Success) ? that.Value : throw new InvalidCastException();
-    public static explicit operator Exception(OptionalResult<T> that) => (that.Mode == OptionalResultMode.Error) ? that.Error : throw new InvalidCastException();
+    public static explicit operator ErrorValue(OptionalResult<T> that) => (that.Mode == OptionalResultMode.Error) ? that.Error : throw new InvalidCastException();
 
     public static implicit operator OptionalResult<T>(NoValue noValue) => new OptionalResult<T>();
 
@@ -129,19 +108,12 @@ public struct OptionalResult<T>
 
     public static implicit operator OptionalResult<T>(Exception error) => new OptionalResult<T>(error);
 
-
-    public static implicit operator OptionalResult<T>(Result<T> value)
-    {
-        if (value.TryGetSuccess(out var successValue))
-        {
+    public static implicit operator OptionalResult<T>(Result<T> value) {
+        if (value.TryGetSuccess(out var successValue)) {
             return new OptionalResult<T>(successValue);
-        }
-        else if (value.TryGetError(out var errorValue))
-        {
+        } else if (value.TryGetError(out var errorValue)) {
             return new OptionalResult<T>(errorValue);
-        }
-        else
-        {
+        } else {
             return new OptionalResult<T>(new InvalidEnumArgumentException($"Invalid enum {value.Mode}."));
         }
     }

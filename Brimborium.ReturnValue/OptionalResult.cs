@@ -67,13 +67,21 @@ public static class OptionalResult {
                 return new OptionalResult<R>();
             }
         } catch (Exception ex) {
-            return new OptionalResult<R>(ex);
+            return new OptionalResult<R>(ErrorValue.CreateFromCatchedException(ex));
         }
     }
 
-    public static OptionalResult<T> Catch<T>(this OptionalResult<T> value, Func<Exception, OptionalResult<T>> fnDefaultValue) {
+    public static OptionalResult<T> Catch<T>(this OptionalResult<T> value, Func<ErrorValue, OptionalResult<T>> fnDefaultValue) {
         if (value.TryGetError(out var error)) {
             return fnDefaultValue(error);
+        } else {
+            return value;
+        }
+    }
+
+    public static OptionalResult<T> Catch<T, A>(this OptionalResult<T> value, A args, Func<ErrorValue, A, OptionalResult<T>> fnDefaultValue) {
+        if (value.TryGetError(out var error)) {
+            return fnDefaultValue(error, args);
         } else {
             return value;
         }
