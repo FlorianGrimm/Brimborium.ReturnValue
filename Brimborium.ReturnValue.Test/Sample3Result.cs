@@ -37,7 +37,7 @@ public class Sample3Result {
     private static OptionalResult<string> DoSomething3(string path) {
         var d = DoSomething3b(path);
         if (d.TryGetError(out var error, out var dopt)) { return error; }
-        if (dopt.TryGetNoValue(out var cnt)) { return NoValue.Value; }
+        if (!dopt.TryGetSuccess(out var cnt)) { return NoValue.Value; }
         return cnt.ToString();
     }
 }

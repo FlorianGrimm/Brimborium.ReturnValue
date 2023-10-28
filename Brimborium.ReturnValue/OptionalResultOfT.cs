@@ -136,6 +136,8 @@ public struct OptionalResult<T> {
 
     public static implicit operator OptionalResult<T>(T value) => new OptionalResult<T>(value);
 
+    public static implicit operator OptionalResult<T>(Exception error) => new OptionalResult<T>(new ErrorValue(error));
+
     public static implicit operator OptionalResult<T>(ErrorValue error) => new OptionalResult<T>(error);
 
     public static implicit operator OptionalResult<T>(Result<T> value) {
