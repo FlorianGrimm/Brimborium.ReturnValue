@@ -4,7 +4,7 @@ namespace Brimborium.ReturnValue;
 public record NoValue {
     public NoValue() { }
 
-    public static NoValue Instance => new NoValue();
+    public static NoValue Value => new NoValue();
 
     //public override bool Equals(object? obj) => (obj is NoValue);
 

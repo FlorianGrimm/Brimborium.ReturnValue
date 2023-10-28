@@ -22,7 +22,7 @@ public class EnumerableExtensionsTest
             if (x % 2 == 0) {
                 return new Optional<int>(x);
             } else {
-                return NoValue.Instance;
+                return NoValue.Value;
             }
         });
         Assert.Equal(new int[] { 2, 4 }, result);
@@ -38,7 +38,7 @@ public class EnumerableExtensionsTest
             if (x % 2 == 0) {
                 return new Optional<int>(x);
             } else {
-                return NoValue.Instance;
+                return NoValue.Value;
             }
         });
         Assert.Equal(new int[] { 2, 4 }, result);

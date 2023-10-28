@@ -43,7 +43,7 @@ public class OptionalTest {
 
     [Fact]
     public void Optional05_TypeCast() {
-        Optional<string> o1 = NoValue.Instance;
+        Optional<string> o1 = NoValue.Value;
         Assert.Equal(OptionalMode.NoValue, o1.Mode);
 
         Optional<string> o2 = "42";

@@ -25,7 +25,7 @@ public static class Optional {
         if (value.TryGetSuccess(out var v)) {
             return predicate(v, args);
         } else {
-            return NoValue.Instance;
+            return NoValue.Value;
         }
     }
 

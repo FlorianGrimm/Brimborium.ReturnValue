@@ -6,7 +6,7 @@ public class OptionalResultOfTTest {
     [Fact]
     public void OptionalResultOfTTest01_Success() {
         {
-            OptionalResult<int> or1 = NoValue.Instance;
+            OptionalResult<int> or1 = NoValue.Value;
             Assert.True(or1.TryGetNoValue());
             Assert.False(or1.TryGetSuccess(out var value1));
             Assert.False(or1.TryGetError(out var error1));
@@ -34,7 +34,7 @@ public class OptionalResultOfTTest {
     [Fact]
     public void OptionalResultOfTTest02_Deconstruct() {
         {
-            OptionalResult<int> or1 = NoValue.Instance;
+            OptionalResult<int> or1 = NoValue.Value;
             var (m, v, e) = or1;
 
             Assert.Equal(OptionalResultMode.NoValue, m);
@@ -61,7 +61,7 @@ public class OptionalResultOfTTest {
 
     [Fact]
     public void OptionalResultOfTTest03_With() {
-        OptionalResult<int> or1 = NoValue.Instance;
+        OptionalResult<int> or1 = NoValue.Value;
         OptionalResult<int> or2 = or1.WithValue(21);
         OptionalResult<int> or3 = or2.WithError(new Exception("gna"));
         OptionalResult<int> or4 = or3.WithNoValue();
