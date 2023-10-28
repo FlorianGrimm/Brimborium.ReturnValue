@@ -1,11 +1,23 @@
 ﻿namespace Brimborium.ReturnValue;
 
+/// <summary>
+/// Extensions for <see cref="OptionalResult{T}"/>
+/// </summary>
 public static class OptionalResult
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="value"></param>
+    /// <returns></returns>
     public static OptionalResult<T> ToOptionalResult<T>(this T value)
-    {
-        return new OptionalResult<T>(value);
-    }
+        => new OptionalResult<T>(value);
+
+    public static OptionalResult<T> If2<T>(this OptionalResult<T> value, Func<T, bool> predicate)
+        => (value) switch { 
+            (_,_,_)=>NoValue.Value
+        };
 
     public static OptionalResult<T> If<T>(this OptionalResult<T> value, Func<T, bool> predicate)
     {
