@@ -1,19 +1,4 @@
-﻿#pragma warning disable IDE0031 // Use null propagation
-namespace Brimborium.ReturnValue;
-
-internal static class ErrorValueInstance {
-    internal static class Singleton {
-        internal static ErrorValue _Uninitialized = CreateUninitialized();
-    }
-    public static ErrorValue GetUninitialized() => Singleton._Uninitialized;
-
-    public static ErrorValue CreateUninitialized() {
-        var error = UninitializedException.Instance;
-        var exceptionDispatchInfo = ExceptionDispatchInfo.Capture(error);
-        return new ErrorValue(error, exceptionDispatchInfo);
-    }
-
-}
+﻿namespace Brimborium.ReturnValue;
 
 public record struct ErrorValue(
     Exception Exception,
@@ -41,6 +26,14 @@ public record struct ErrorValue(
         throw new UninitializedException();
     }
 
+    public ErrorValue WithIsLogged(bool isLogged = true)
+        => new ErrorValue(this.Exception, this.ExceptionDispatchInfo, isLogged);
+
+    public static Exception GetAndSetIsLogged(ref ErrorValue that) {
+        that = that.WithIsLogged();
+        return that.Exception;
+    }
+
     public static implicit operator bool(ErrorValue that) {
         return (that.Exception is not null);
     }
@@ -48,4 +41,18 @@ public record struct ErrorValue(
     public static implicit operator ErrorValue(Exception error) {
         return new ErrorValue(error, null, false);
     }
+}
+
+internal static class ErrorValueInstance {
+    internal static class Singleton {
+        internal static ErrorValue _Uninitialized = CreateUninitialized();
+    }
+    public static ErrorValue GetUninitialized() => Singleton._Uninitialized;
+
+    public static ErrorValue CreateUninitialized() {
+        var error = UninitializedException.Instance;
+        var exceptionDispatchInfo = ExceptionDispatchInfo.Capture(error);
+        return new ErrorValue(error, exceptionDispatchInfo);
+    }
+
 }

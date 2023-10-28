@@ -26,7 +26,7 @@ public static class OptionalResult {
         return new OptionalResult<T>();
     }
 
-    public static OptionalResult<R> Select<T, A, R>(this OptionalResult<T> value, A args, Func<T, A, OptionalResult<R>> predicate) {
+    public static OptionalResult<R> Map<T, A, R>(this OptionalResult<T> value, A args, Func<T, A, OptionalResult<R>> predicate) {
         if (value.TryGetSuccess(out var v)) {
             return predicate(v, args);
         } else if (value.TryGetError(out var error)) {

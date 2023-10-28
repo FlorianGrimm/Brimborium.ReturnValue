@@ -1,7 +1,7 @@
 ﻿namespace Brimborium.ReturnValue;
 
 public static class Optional {
-    public static Optional<T> ToOptional<T>(this T value) {
+    public static Optional<T> AsOptional<T>(this T value) {
         return new Optional<T>(value);
     }
 
@@ -21,9 +21,9 @@ public static class Optional {
         }
     }
 
-    public static Optional<R> Select<T, A, R>(this Optional<T> value, A args, Func<T, A, Optional<R>> predicate) {
+    public static Optional<R> Map<T, A, R>(this Optional<T> value, A args, Func<T, A, Optional<R>> predicate) {
         if (value.TryGetSuccess(out var v)) {
-            return predicate(v,args);
+            return predicate(v, args);
         } else {
             return NoValue.Instance;
         }

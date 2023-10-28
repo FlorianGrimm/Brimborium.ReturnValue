@@ -117,8 +117,44 @@ public class OptionalResultOfTTest {
         }
     }
 
+
+
     [Fact]
-    public void OptionalResultOfTTest05_IfSuccess() {
+    public void OptionalResultOfTTest10_IfNoValue() {
+        var r = new OptionalResult<int>();
+        var b = r.If(static (v) => v == 7);
+        Assert.False(b);
+        Assert.True(b.TryGetNoValue());
+    }
+
+
+    [Fact]
+    public void OptionalResultOfTTest11_IfSuccess() {
+        var r = new OptionalResult<int>(7);
+        var b = r.If(static (v) => v == 7);
+        Assert.True(b);
+        Assert.True(b.TryGetSuccess(out var act) && act == 7);
+    }
+
+    [Fact]
+    public void OptionalResultOfTTest12_IfFail() {
+        var r = new OptionalResult<int>(5);
+        var b = r.If(static (v) => v == 7);
+        Assert.False(b);
+        Assert.True(b.TryGetNoValue());
+    }
+
+
+    [Fact]
+    public void OptionalResultOfTTest20_IfNoValue() {
+        var r = new OptionalResult<int>();
+        var b = r.If(7, static (v, a) => v == a);
+        Assert.False(b);
+        Assert.True(b.TryGetNoValue());
+    }
+
+    [Fact]
+    public void OptionalResultOfTTest21_IfSuccess() {
         var r = new OptionalResult<int>(7);
         var b = r.If(7, static (v, a) => v == a);
         Assert.True(b);
@@ -126,14 +162,16 @@ public class OptionalResultOfTTest {
     }
 
     [Fact]
-    public void OptionalResultOfTTest06_IfFail() {
+    public void OptionalResultOfTTest22_IfFail() {
         var r = new OptionalResult<int>(5);
         var b = r.If(7, static (v, a) => v == a);
         Assert.False(b);
         Assert.True(b.TryGetNoValue());
     }
+
+
     [Fact]
-    public void OptionalResultOfTTest07_OrDefaultWithNoValue() {
+    public void OptionalResultOfTTest30_OrDefaultWithNoValue() {
         var r = new OptionalResult<int>();
         var b = r.OrDefault(6, (a) => a * 7);
         Assert.True(b);
@@ -141,7 +179,7 @@ public class OptionalResultOfTTest {
     }
 
     [Fact]
-    public void OptionalResultOfTTest07_OrDefaultWithValue() {
+    public void OptionalResultOfTTest31_OrDefaultWithValue() {
         var r = new OptionalResult<int>(21);
         var b = r.OrDefault(6, (a) => a * 7);
         Assert.True(b);
@@ -149,7 +187,7 @@ public class OptionalResultOfTTest {
     }
 
     [Fact]
-    public void OptionalResultOfTTest08_TryNoError() {
+    public void OptionalResultOfTTest40_TryNoError() {
         var r = new OptionalResult<int>(21);
         var b = r.Try(1, static (v, a) => { return (v * a).AsOptionalResult(); });
         Assert.True(b);
@@ -158,10 +196,10 @@ public class OptionalResultOfTTest {
 
 
     [Fact]
-    public void OptionalResultOfTTest09_TryError() {
+    public void OptionalResultOfTTest50_TryError() {
         var r = new OptionalResult<int>(21);
         var b = r.Try(1, static (v, a) => {
-            if (a < 0) { 
+            if (a < 0) {
                 return (v * a).AsOptionalResult();
             }
             throw new ArgumentException("gna");

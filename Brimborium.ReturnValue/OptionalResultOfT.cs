@@ -97,9 +97,13 @@ public struct OptionalResult<T> {
 
 
     public static implicit operator bool(OptionalResult<T> that) => that.Mode == OptionalResultMode.Success;
+
     public static bool operator true(OptionalResult<T> that) => that.Mode == OptionalResultMode.Success;
+    
     public static bool operator false(OptionalResult<T> that) => that.Mode != OptionalResultMode.Success;
+    
     public static explicit operator T(OptionalResult<T> that) => (that.Mode == OptionalResultMode.Success) ? that.Value : throw new InvalidCastException();
+    
     public static explicit operator ErrorValue(OptionalResult<T> that) => (that.Mode == OptionalResultMode.Error) ? that.Error : throw new InvalidCastException();
 
     public static implicit operator OptionalResult<T>(NoValue noValue) => new OptionalResult<T>();
