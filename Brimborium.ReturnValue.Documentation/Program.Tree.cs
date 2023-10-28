@@ -29,7 +29,7 @@ internal partial class Program
         System.Diagnostics.Trace.Assert("aa" == a2.Name);
 
         Tree? tree = null;
-        var a3 = a.WithOptional(tree.ToOptional(), "aa");
+        var a3 = a.WithOptional(tree.AsOptional(), "aa");
         System.Diagnostics.Trace.Assert("aa" == a3.Name);
 
         var a4 = a.WithOptional((Tree?)null, "aa");

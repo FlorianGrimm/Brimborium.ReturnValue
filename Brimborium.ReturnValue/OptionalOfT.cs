@@ -4,13 +4,18 @@ public enum OptionalMode { NoValue, Success }
 
 public readonly struct Optional<T>
 {
+    [JsonInclude]
     public readonly OptionalMode Mode;
-    [AllowNull] private readonly T _Value;
+
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [JsonInclude]
+    [AllowNull]
+    public readonly T Value;
 
     public Optional()
     {
         this.Mode = OptionalMode.NoValue;
-        this._Value = default;
+        this.Value = default;
     }
 
     public Optional(
@@ -18,31 +23,28 @@ public readonly struct Optional<T>
     )
     {
         this.Mode = OptionalMode.Success;
-        this._Value = value;
+        this.Value = value;
     }
 
+    [JsonConstructor]
     public Optional(
         OptionalMode Mode,
-        T? Value
+        [AllowNull]
+        T Value
     )
     {
-        this.Mode = (Mode == OptionalMode.Success) ? OptionalMode.Success : OptionalMode.NoValue;
-        this._Value = Value;
+        if (Mode == OptionalMode.Success) {
+            this.Mode = OptionalMode.Success;
+            this.Value = Value;
+        } else { 
+            this.Mode = OptionalMode.NoValue;
+            this.Value = Value;
+        }
     }
 
-
-    public readonly T Value
-    {
-        get
-        {
-            if (this.Mode == OptionalMode.NoValue)
-            {
-                throw new NoValueAccessingException();
-            } else
-            {
-                return this._Value!;
-            }
-        }
+    public void Deconstruct(out OptionalMode mode, [AllowNull] out T value) {
+        mode = this.Mode;
+        value = this.Value;
     }
 
     public bool TryGetNoValue()
@@ -58,7 +60,7 @@ public readonly struct Optional<T>
             return false;
         } else
         {
-            value = this._Value!;
+            value = this.Value!;
             return true;
         }
     }
@@ -66,7 +68,7 @@ public readonly struct Optional<T>
     public T GetValueOrDefault(T defaultValue)
         => (this.Mode == OptionalMode.NoValue)
         ? defaultValue
-        : this._Value!;
+        : this.Value!;
 
 #pragma warning disable IDE0060 // Remove unused parameter
     public static implicit operator Optional<T>(NoValue value) => new Optional<T>();
@@ -77,6 +79,7 @@ public readonly struct Optional<T>
     public static implicit operator bool(Optional<T> that) => that.Mode == OptionalMode.Success;
     public static bool operator true(Optional<T> that) => that.Mode == OptionalMode.Success;
     public static bool operator false(Optional<T> that) => that.Mode != OptionalMode.Success;
+    
     public static explicit operator T(Optional<T> that) => (that.Mode == OptionalMode.Success) ? that.Value : throw new InvalidCastException();
 
 }
