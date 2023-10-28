@@ -18,7 +18,7 @@ public class Sample2Result {
         Assert.False(act.TryGetSuccess(out var value));
         Assert.True(act.TryGetError(out var error));
         Assert.Null(value);
-        Assert.NotNull(error);
+        Assert.NotNull(error.Exception);
     }
 
     private static Result<int> DoSomething2b(string path) 
