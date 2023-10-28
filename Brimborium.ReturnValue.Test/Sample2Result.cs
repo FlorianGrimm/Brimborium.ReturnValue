@@ -8,7 +8,7 @@ public class Sample2Result {
         Assert.True(act.TryGetSuccess(out var value));
         Assert.False(act.TryGetError(out var error));
         Assert.NotNull(value);
-        Assert.Null(error);
+        Assert.Null(error.Exception);
     }
 
     [Fact]
