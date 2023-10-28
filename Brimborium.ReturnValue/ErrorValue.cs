@@ -26,7 +26,7 @@ public record struct ErrorValue(
         throw new UninitializedException();
     }
 
-    public ErrorValue WithIsLogged(bool isLogged = true)
+    public readonly ErrorValue WithIsLogged(bool isLogged = true)
         => new ErrorValue(this.Exception, this.ExceptionDispatchInfo, isLogged);
 
     public static Exception GetAndSetIsLogged(ref ErrorValue that) {

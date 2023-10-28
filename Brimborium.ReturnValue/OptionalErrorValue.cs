@@ -28,7 +28,7 @@ public record struct OptionalErrorValue(
     }
 
     // [DoesNotReturnIf]
-    public void Throw() {
+    public readonly void Throw() {
         if (this.ExceptionDispatchInfo is not null) {
             this.ExceptionDispatchInfo.Throw();
         }

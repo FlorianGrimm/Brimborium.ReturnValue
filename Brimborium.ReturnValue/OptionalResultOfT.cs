@@ -36,7 +36,7 @@ public struct OptionalResult<T> {
     }
 
     // TODO: better?    OptionalErrorValue
-    public void Deconstruct(out OptionalResultMode mode, out T? value, out OptionalErrorValue error) {
+    public readonly void Deconstruct(out OptionalResultMode mode, out T? value, out OptionalErrorValue error) {
         switch (this.Mode) {
             case OptionalResultMode.Success:
                 mode = OptionalResultMode.Success;
@@ -56,7 +56,7 @@ public struct OptionalResult<T> {
         }
     }
 
-    public bool TryGetNoValue() {
+    public readonly bool TryGetNoValue() {
         if (this.Mode == OptionalResultMode.NoValue) {
             return true;
         } else if (this.Mode == OptionalResultMode.Success) {
@@ -68,7 +68,7 @@ public struct OptionalResult<T> {
         }
     }
 
-    public bool TryGetSuccess([MaybeNullWhen(false)] out T value) {
+    public readonly bool TryGetSuccess([MaybeNullWhen(false)] out T value) {
         if (this.Mode == OptionalResultMode.Success) {
             value = this.Value!;
             return true;
@@ -78,7 +78,7 @@ public struct OptionalResult<T> {
         }
     }
 
-    public bool TryGetError([MaybeNullWhen(false)] out ErrorValue error) {
+    public readonly bool TryGetError([MaybeNullWhen(false)] out ErrorValue error) {
         if (this.Mode == OptionalResultMode.Error) {
             System.Diagnostics.Debug.Assert(this.Error.Exception is not null);
             error = this.Error!;
@@ -89,11 +89,27 @@ public struct OptionalResult<T> {
         }
     }
 
-    public OptionalResult<T> WithNoValue() => new OptionalResult<T>();
+    public readonly bool TryGetError([MaybeNullWhen(false)] out ErrorValue error, [MaybeNullWhen(true)] out Optional<T> value) {
+        if (this.Mode == OptionalResultMode.Error) {
+            error = this.Error!;
+            value = default;
+            return true;
+        } else if (this.Mode == OptionalResultMode.Success){
+            error = default;
+            value = new Optional<T>(this.Value);
+            return false;
+        } else {
+            error = default;
+            value = new Optional<T>();
+            return false;
+        }
+    }
 
-    public OptionalResult<T> WithValue(T value) => new OptionalResult<T>(value);
+    public readonly OptionalResult<T> WithNoValue() => new OptionalResult<T>();
 
-    public OptionalResult<T> WithError(ErrorValue error) => new OptionalResult<T>(error);
+    public readonly OptionalResult<T> WithValue(T value) => new OptionalResult<T>(value);
+
+    public readonly OptionalResult<T> WithError(ErrorValue error) => new OptionalResult<T>(error);
 
 
     public static implicit operator bool(OptionalResult<T> that) => that.Mode == OptionalResultMode.Success;
