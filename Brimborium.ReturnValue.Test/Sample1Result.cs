@@ -8,7 +8,7 @@ public class Sample1Result {
         Assert.True(act.TryGetSuccess(out var value));
         Assert.False(act.TryGetError(out var error));
         Assert.NotNull(value);
-        Assert.Null(error);
+        Assert.Null(error.Exception);
     }
 
     [Fact]
@@ -18,7 +18,7 @@ public class Sample1Result {
         Assert.False(act.TryGetSuccess(out var value));
         Assert.True(act.TryGetError(out var error));
         Assert.Null(value);
-        Assert.NotNull(error);
+        Assert.NotNull(error.Exception);
     }
 
     private static Result<int> DoSomething1b(string path) {
