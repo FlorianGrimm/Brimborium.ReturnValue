@@ -2,7 +2,7 @@ namespace Brimborium.ReturnValue;
 
 public enum ResultMode { Success, Error }
 
-public class Result<T> {
+public struct Result<T> {
     public readonly ResultMode Mode;
     [AllowNull] public readonly T Value;
     [AllowNull] public readonly ErrorValue Error;
