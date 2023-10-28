@@ -25,7 +25,7 @@ internal partial class Program
         System.Diagnostics.Trace.Assert("root" == a.Parent?.Name);
         System.Diagnostics.Trace.Assert("a" == a.Name);
 
-        var a2 = a.WithOptional(NoValue.Instance, "aa");
+        var a2 = a.WithOptional(NoValue.Value, "aa");
         System.Diagnostics.Trace.Assert("aa" == a2.Name);
 
         Tree? tree = null;
