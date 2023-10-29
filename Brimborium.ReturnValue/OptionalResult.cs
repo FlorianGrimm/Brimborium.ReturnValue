@@ -35,6 +35,16 @@ public static class OptionalResult {
         return new OptionalResult<T>();
     }
 
+    public static OptionalResult<R> Map<T, R>(this OptionalResult<T> that, Func<T, OptionalResult<R>> predicate) {
+        if (that.TryGetSuccess(out var v)) {
+            return predicate(v);
+        } else if (that.TryGetError(out var error)) {
+            return new OptionalResult<R>(error);
+        } else {
+            return new OptionalResult<R>();
+        }
+    }
+
     public static OptionalResult<R> Map<T, A, R>(this OptionalResult<T> that, A args, Func<T, A, OptionalResult<R>> predicate) {
         if (that.TryGetSuccess(out var v)) {
             return predicate(v, args);
@@ -134,14 +144,14 @@ public static class OptionalResult {
         Func<A, OptionalResult<R>, OptionalResult<R>>? onNoValue = default,
         Func<ErrorValue, A, OptionalResult<R>, OptionalResult<R>>? onError = default
     ) {
-        if (that.TryGetError(out var error, out var opt)) {
+        if (that.TryGetError(out var error)) {
             if (onError is null) {
                 return new OptionalResult<R>(error);
             } else {
                 return onError(error, args, defaultValue);
             }
         }
-        if (opt.TryGetSuccess(out var value)) {
+        if (that.TryGetSuccess(out var value)) {
             if (onSuccess is null) {
                 return defaultValue;
             } else {

@@ -117,8 +117,6 @@ public class OptionalResultOfTTest {
         }
     }
 
-
-
     [Fact]
     public void OptionalResultOfTTest10_IfNoValue() {
         var r = new OptionalResult<int>();
@@ -126,7 +124,6 @@ public class OptionalResultOfTTest {
         Assert.False(b);
         Assert.True(b.TryGetNoValue());
     }
-
 
     [Fact]
     public void OptionalResultOfTTest11_IfSuccess() {
@@ -137,13 +134,40 @@ public class OptionalResultOfTTest {
     }
 
     [Fact]
-    public void OptionalResultOfTTest12_IfFail() {
-        var r = new OptionalResult<int>(5);
+    public void OptionalResultOfTTest12_IfError() {
+        var r = new OptionalResult<int>(new ErrorValue(new Exception("gna")));
         var b = r.If(static (v) => v == 7);
+        Assert.False(b);
+        Assert.Equal(OptionalResultMode.Error, b.Mode);
+        Assert.True(b.TryGetError(out var error));
+        Assert.True(error.Exception is not null);
+    }
+
+    [Fact]
+    public void OptionalResultOfTTest13_IfArgsNoValue() {
+        var r = new OptionalResult<int>();
+        var b = r.If(7, static (v, a) => v == a);
         Assert.False(b);
         Assert.True(b.TryGetNoValue());
     }
 
+    [Fact]
+    public void OptionalResultOfTTest14_IfArgsSuccess() {
+        var r = new OptionalResult<int>(7);
+        var b = r.If(7, static (v, a) => v == a);
+        Assert.True(b);
+        Assert.True(b.TryGetSuccess(out var act) && act == 7);
+    }
+
+    [Fact]
+    public void OptionalResultOfTTest15_IfArgsError() {
+        var r = new OptionalResult<int>(new ErrorValue(new Exception("gna")));
+        var b = r.If(7, static (v, a) => v == a);
+        Assert.False(b);
+        Assert.Equal(OptionalResultMode.Error, b.Mode);
+        Assert.True(b.TryGetError(out var error));
+        Assert.True(error.Exception is not null);
+    }
 
     [Fact]
     public void OptionalResultOfTTest20_IfNoValue() {
@@ -169,9 +193,60 @@ public class OptionalResultOfTTest {
         Assert.True(b.TryGetNoValue());
     }
 
+    [Fact]
+    public void OptionalResultOfTTest30_MapArgsValue() {
+        var r = new OptionalResult<int>(7);
+        var b = r.Map(6, (v, a) => (a * v).ToOptionalResult());
+        Assert.True(b);
+        Assert.True(b.TryGetSuccess(out var act) && act == 42);
+    }
 
     [Fact]
-    public void OptionalResultOfTTest30_OrDefaultWithNoValue() {
+    public void OptionalResultOfTTest31_MapValue() {
+        var r = new OptionalResult<int>(7);
+        var b = r.Map((v) => (v * 6).ToOptionalResult());
+        Assert.True(b);
+        Assert.True(b.TryGetSuccess(out var act) && act == 42);
+    }
+
+    [Fact]
+    public void OptionalResultOfTTest32_MapArgsError() {
+        var r = new OptionalResult<int>(new ErrorValue(new Exception("gna")));
+        var b = r.Map(6, (v, a) => (a * v).ToOptionalResult());
+        Assert.False(b);
+        Assert.Equal(OptionalResultMode.Error, b.Mode);
+        Assert.True(b.TryGetError(out var error));
+        Assert.True(error.Exception is not null);
+    }
+
+    [Fact]
+    public void OptionalResultOfTTest33_MapError() {
+        var r = new OptionalResult<int>(new ErrorValue(new Exception("gna")));
+        var b = r.Map((v) => (v * 6).ToOptionalResult());
+        Assert.False(b);
+        Assert.Equal(OptionalResultMode.Error, b.Mode);
+        Assert.True(b.TryGetError(out var error));
+        Assert.True(error.Exception is not null);
+    }
+
+    [Fact]
+    public void OptionalResultOfTTest34_MapArgsNoValue() {
+        var r = new OptionalResult<int>();
+        var b = r.Map((v) => (v * 6).ToOptionalResult());
+        Assert.False(b);
+        Assert.True(b.TryGetNoValue());
+    }
+
+    [Fact]
+    public void OptionalResultOfTTest35_MapNoValue() {
+        var r = new OptionalResult<int>();
+        var b = r.Map((v) => (v * 6).ToOptionalResult());
+        Assert.False(b);
+        Assert.True(b.TryGetNoValue());
+    }
+
+    [Fact]
+    public void OptionalResultOfTTest40_OrDefaultWithNoValue() {
         var r = new OptionalResult<int>();
         var b = r.OrDefault(6, (a) => a * 7);
         Assert.True(b);
@@ -179,7 +254,7 @@ public class OptionalResultOfTTest {
     }
 
     [Fact]
-    public void OptionalResultOfTTest31_OrDefaultWithValue() {
+    public void OptionalResultOfTTest41_OrDefaultWithValue() {
         var r = new OptionalResult<int>(21);
         var b = r.OrDefault(6, (a) => a * 7);
         Assert.True(b);
@@ -187,11 +262,75 @@ public class OptionalResultOfTTest {
     }
 
     [Fact]
-    public void OptionalResultOfTTest40_TryNoError() {
+    public void OptionalResultOfTTest42_OrDefaultWithError() {
+        var r = new OptionalResult<int>(new ErrorValue(new Exception("gna")));
+        var b = r.OrDefault(6, (a) => a * 7);
+        Assert.False(b);
+        Assert.Equal(OptionalResultMode.Error, b.Mode);
+        Assert.True(b.TryGetError(out var error));
+        Assert.True(error.Exception is not null);
+    }
+
+
+    [Fact]
+    public void OptionalResultOfTTest43_OrDefaultArgsWithNoValue() {
+        var r = new OptionalResult<int>();
+        var b = r.OrDefault(new OptionalResult<int>(42));
+        Assert.True(b);
+        Assert.True(b.TryGetSuccess(out var act) && act == 42);
+    }
+
+    [Fact]
+    public void OptionalResultOfTTest44_OrDefaultArgsWithValue() {
+        var r = new OptionalResult<int>(21);
+        var b = r.OrDefault(new OptionalResult<int>(42));
+        Assert.True(b);
+        Assert.True(b.TryGetSuccess(out var act) && act == 21);
+    }
+
+    [Fact]
+    public void OptionalResultOfTTest45_OrDefaultArgsWithError() {
+        var r = new OptionalResult<int>(new ErrorValue(new Exception("gna")));
+        var b = r.OrDefault(new OptionalResult<int>(42));
+        Assert.False(b);
+        Assert.Equal(OptionalResultMode.Error, b.Mode);
+        Assert.True(b.TryGetError(out var error));
+        Assert.True(error.Exception is not null);
+    }
+
+    [Fact]
+    public void OptionalResultOfTTest50_TryValue() {
         var r = new OptionalResult<int>(21);
         var b = r.Try(1, static (v, a) => { return (v * a).AsOptionalResult(); });
         Assert.True(b);
         Assert.True(b.TryGetSuccess(out var act) && act == 21);
+    }
+
+    [Fact]
+    public void OptionalResultOfTTest51_TryError() {
+        var r = new OptionalResult<int>(new ErrorValue(new Exception("gna")));
+        var b = r.Try(1, static (v, a) => { return (v * a).AsOptionalResult(); });
+        Assert.False(b);
+        Assert.True(b.TryGetError(out var error));
+    }
+
+    [Fact]
+    public void OptionalResultOfTTest52_TryNoValue() {
+        var r = new OptionalResult<int>();
+        var b = r.Try(1, static (v, a) => { return (v * a).AsOptionalResult(); });
+        Assert.False(b);
+        Assert.True(b.TryGetNoValue());
+    }
+
+    [Fact]
+    public void OptionalResultOfTTest53_TryValueThrow() {
+        var r = new OptionalResult<int>(21);
+        var b = r.Try(1, static (v, a) => {
+            if (v < 0) return (v * a).AsOptionalResult();
+            throw new Exception("gna");
+        });
+        Assert.False(b);
+        Assert.True(b.TryGetError(out var error));
     }
 
 
@@ -207,5 +346,31 @@ public class OptionalResultOfTTest {
         Assert.False(b);
         Assert.True(b.TryGetError(out var act1));
         Assert.True(b.TryGetError(out var act2) && act2.Exception is ArgumentException);
+    }
+
+    [Fact]
+    public void OptionalResult_ChainArgsWithDefaultValue() {
+        t(
+            arg: new OptionalResult<int>(21),
+            expected: new OptionalResult<string>("42"));
+        t(
+            arg: new OptionalResult<int>(new ErrorValue(new Exception("gna"))),
+            expected: new OptionalResult<string>(new ErrorValue(new Exception("gna"))));
+        t(
+            arg: new OptionalResult<int>(),
+            expected: new OptionalResult<string>());
+
+        static void t(OptionalResult<int> arg, OptionalResult<string> expected) {
+            OptionalResult<string> act = arg.Chain(
+                2,
+                defaultValue: new OptionalResult<string>(),
+                onSuccess: static (v, a, r) => r.WithValue((v * a).ToString()),
+                onNoValue: static (a, r) => r,
+                onError: static (error, a, r) => r.WithError(error)
+                );
+
+            Assert.Equal(expected.Mode, act.Mode);
+        }
+
     }
 }

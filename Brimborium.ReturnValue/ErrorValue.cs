@@ -1,16 +1,11 @@
 ﻿namespace Brimborium.ReturnValue;
 
+[DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
 public record struct ErrorValue(
     Exception Exception,
     ExceptionDispatchInfo? ExceptionDispatchInfo = default,
     bool IsLogged = false) {
 
-    public static ErrorValue Uninitialized => ErrorValueInstance.GetUninitialized();
-
-    public static ErrorValue CreateFromCatchedException(Exception exception) {
-        var exceptionDispatchInfo = ExceptionDispatchInfo.Capture(exception);
-        return new ErrorValue(exception, exceptionDispatchInfo);
-    }
 
     [DoesNotReturn]
     public void Throw() {
@@ -26,18 +21,28 @@ public record struct ErrorValue(
         throw new UninitializedException();
     }
 
+    private string GetDebuggerDisplay() {
+        if (this.Exception is not null) {
+            return $"{this.Exception.GetType().Name} {this.Exception.Message}";
+        }
+        return this.ToString();
+    }
+
     public readonly ErrorValue WithIsLogged(bool isLogged = true)
         => new ErrorValue(this.Exception, this.ExceptionDispatchInfo, isLogged);
 
+    public static ErrorValue Uninitialized => ErrorValueInstance.GetUninitialized();
+
+    public static ErrorValue CreateFromCatchedException(Exception exception) {
+        var exceptionDispatchInfo = ExceptionDispatchInfo.Capture(exception);
+        return new ErrorValue(exception, exceptionDispatchInfo);
+    }
+    
     public static Exception GetAndSetIsLogged(ref ErrorValue that) {
         that = that.WithIsLogged();
         return that.Exception;
     }
 
-    public static implicit operator bool(ErrorValue that) {
-        return (that.Exception is not null);
-    }
-    
     public static implicit operator ErrorValue(Exception error) {
         return new ErrorValue(error, null, false);
     }

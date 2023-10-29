@@ -1,24 +1,35 @@
 ﻿namespace Brimborium.ReturnValue;
 
-public class Sample3Result {
+public class Sample3ObjectResult {
     [Fact]
-    public void Sample3Result_01() {
+    public void Sample3ObjectResult_01() {
         var act = DoSomething3(@"c:\");
 
         Assert.True(act.TryGetSuccess(out var value));
         Assert.False(act.TryGetError(out var error));
         Assert.NotNull(value);
-        Assert.Null(error);
+        Assert.Null(error.Exception);
     }
 
     [Fact]
-    public void Sample3Result_02() {
+    public void Sample3ObjectResult_02() {
         var act = DoSomething3(@"a:\");
 
         Assert.False(act.TryGetSuccess(out var value));
         Assert.True(act.TryGetError(out var error));
         Assert.Null(value);
-        Assert.NotNull(error);
+        Assert.NotNull(error.Exception);
+    }
+
+    [Fact]
+    public void Sample3ObjectResult_03() {
+        var act = DoSomething3(@"");
+
+        Assert.False(act.TryGetSuccess(out var value));
+        Assert.False(act.TryGetError(out var error));
+        Assert.True(act.TryGetNoValue());
+        Assert.Null(value);
+        Assert.Null(error.Exception);
     }
 
     private static OptionalResult<int> DoSomething3b(string path) {

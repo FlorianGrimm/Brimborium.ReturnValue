@@ -18,8 +18,8 @@ public class EnumerableExtensionsTest
     [Fact]
     public void SelectWhereTest2(){
         var source = new int[] { 1, 2, 3, 4, 5 };
-        var result = source.SelectWhere((x) => {
-            if (x % 2 == 0) {
+        var result = source.SelectWhere(2,(x,a) => {
+            if (x % a == 0) {
                 return new Optional<int>(x);
             } else {
                 return NoValue.Value;
@@ -28,22 +28,33 @@ public class EnumerableExtensionsTest
         Assert.Equal(new int[] { 2, 4 }, result);
     }
 
-    
     [Fact]
     public void SelectWhereTest3() {
-
-        //Optional.ToOptional
         var source = new int[] { 1, 2, 3, 4, 5 };
-        var result = source.SelectWhere(static (x) => {
+        var result = source.SelectWhere(test);
+        Assert.Equal(new int[] { 2, 4 }, result);
+        
+        static Optional<int> test(int x) {
             if (x % 2 == 0) {
-                return new Optional<int>(x);
+                return x;
             } else {
                 return NoValue.Value;
             }
-        });
+        }
+    }
+
+    [Fact]
+    public void SelectWhereTest4() {
+        var source = new int[] { 1, 2, 3, 4, 5 };
+        var result = source.SelectWhere(2, test);
         Assert.Equal(new int[] { 2, 4 }, result);
 
-        // static OptionalResult<int> p(int x)
-        //     => x % 2 == 0 ? x.AsOptionalResult() : NoValue.Instance;
+        static Optional<int> test(int x, int a) {
+            if (x % 2 == 0) {
+                return x;
+            } else {
+                return NoValue.Value;
+            }
+        }
     }
 }

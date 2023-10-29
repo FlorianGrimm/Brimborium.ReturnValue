@@ -1,5 +1,4 @@
 ﻿#pragma warning disable IDE0031 // Use null propagation
-using System.Diagnostics;
 
 namespace Brimborium.ReturnValue;
 
@@ -9,7 +8,7 @@ public record struct OptionalErrorValue(
     ExceptionDispatchInfo? ExceptionDispatchInfo = default,
     bool IsLogged = false
     ) {
-    // [DoesNotReturnIf]
+    
     public readonly void Throw() {
         if (this.ExceptionDispatchInfo is not null) {
             this.ExceptionDispatchInfo.Throw();
@@ -19,10 +18,16 @@ public record struct OptionalErrorValue(
             throw this.Exception;
         }
     }
-    
+
+    public readonly OptionalErrorValue WithIsLogged(bool isLogged = true)
+        => new OptionalErrorValue(this.Exception, this.ExceptionDispatchInfo, isLogged);
+
     private string GetDebuggerDisplay() {
-        return $"{this.Exception}";
-        //return this.ToString();
+        if (this.Exception is null) {
+            return $"NoException";
+        } else {
+            return $"{this.Exception.GetType().Name} {this.Exception.Message}";
+        }
     }
 
     public static OptionalErrorValue Uninitialized => OptionalErrorValueInstance.GetUninitialized();
@@ -32,10 +37,17 @@ public record struct OptionalErrorValue(
         return new OptionalErrorValue(exception, exceptionDispatchInfo, false);
     }
 
+    public static Exception GetAndSetIsLogged(ref OptionalErrorValue that) {
+        that = that.WithIsLogged();
+        return that.Exception;
+    }
+
     public static implicit operator bool(OptionalErrorValue that)
         => (that.Exception is not null);
+
     public static implicit operator OptionalErrorValue(Exception exception)
         => new OptionalErrorValue(exception, null, false);
+
     public static implicit operator OptionalErrorValue(ErrorValue error)
         => new OptionalErrorValue(error.Exception, error.ExceptionDispatchInfo, error.IsLogged);
 
