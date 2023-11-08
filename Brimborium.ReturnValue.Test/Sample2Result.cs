@@ -5,7 +5,7 @@ public class Sample2Result {
     public void Sample2Result_01() {
         var act= DoSomething2(@"c:\");
 
-        Assert.True(act.TryGetSuccess(out var value));
+        Assert.True(act.TryGetValue(out var value));
         Assert.False(act.TryGetError(out var error));
         Assert.NotNull(value);
         Assert.Null(error.Exception);
@@ -15,7 +15,7 @@ public class Sample2Result {
     public void Sample2Result_02() {
         var act = DoSomething2(@"a:\");
 
-        Assert.False(act.TryGetSuccess(out var value));
+        Assert.False(act.TryGetValue(out var value));
         Assert.True(act.TryGetError(out var error));
         Assert.Null(value);
         Assert.NotNull(error.Exception);

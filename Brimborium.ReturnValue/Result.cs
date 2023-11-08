@@ -16,7 +16,7 @@ public static class Result {
         => new Result<T>(that.Value);
 
     public static Result<T> AsResult<T>(this OptionalResult<T> that) {
-        if (that.TryGetSuccess(out var successValue)) {
+        if (that.TryGetValue(out var successValue)) {
             return new Result<T>(successValue);
         } else if (that.TryGetError(out var errorValue)) {
             return new Result<T>(errorValue);
@@ -47,7 +47,7 @@ public static class Result {
         => new OptionalResult<T>(value);
 
     public static OptionalResult<T> AsOptionalResult<T>(this Result<T> that) {
-        if (that.TryGetSuccess(out var successValue)) {
+        if (that.TryGetValue(out var successValue)) {
             return new OptionalResult<T>(successValue);
         } else if (that.TryGetError(out var errorValue)) {
             return new OptionalResult<T>(errorValue);

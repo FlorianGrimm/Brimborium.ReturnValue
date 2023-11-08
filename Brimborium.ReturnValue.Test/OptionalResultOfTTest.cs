@@ -8,7 +8,7 @@ public class OptionalResultOfTTest {
         {
             OptionalResult<int> or1 = NoValue.Value;
             Assert.True(or1.TryGetNoValue());
-            Assert.False(or1.TryGetSuccess(out var value1));
+            Assert.False(or1.TryGetValue(out var value1));
             Assert.False(or1.TryGetError(out var error1));
             Assert.Equal(0, value1);
             Assert.Null(error1.Exception);
@@ -16,7 +16,7 @@ public class OptionalResultOfTTest {
         {
             OptionalResult<int> or2 = 42;
             Assert.False(or2.TryGetNoValue());
-            Assert.True(or2.TryGetSuccess(out var value2));
+            Assert.True(or2.TryGetValue(out var value2));
             Assert.False(or2.TryGetError(out var error2));
             Assert.Equal(42, value2);
             Assert.Null(error2.Exception);
@@ -24,7 +24,7 @@ public class OptionalResultOfTTest {
         {
             OptionalResult<int> or3 = new Exception("gna");
             Assert.False(or3.TryGetNoValue());
-            Assert.False(or3.TryGetSuccess(out var value3));
+            Assert.False(or3.TryGetValue(out var value3));
             Assert.True(or3.TryGetError(out var error3));
             Assert.Equal(0, value3);
             Assert.Equal("gna", error3.Exception.Message);
@@ -67,7 +67,7 @@ public class OptionalResultOfTTest {
         OptionalResult<int> or4 = or3.WithNoValue();
 
         Assert.Equal(OptionalResultMode.NoValue, or1.Mode);
-        Assert.True(or2.TryGetSuccess(out var value2));
+        Assert.True(or2.TryGetValue(out var value2));
         Assert.Equal(21, value2);
         Assert.True(or3.TryGetError(out var error3));
         Assert.Equal("gna", error3.Exception.Message);
@@ -130,7 +130,7 @@ public class OptionalResultOfTTest {
         var r = new OptionalResult<int>(7);
         var b = r.If(static (v) => v == 7);
         Assert.True(b);
-        Assert.True(b.TryGetSuccess(out var act) && act == 7);
+        Assert.True(b.TryGetValue(out var act) && act == 7);
     }
 
     [Fact]
@@ -156,7 +156,7 @@ public class OptionalResultOfTTest {
         var r = new OptionalResult<int>(7);
         var b = r.If(7, static (v, a) => v == a);
         Assert.True(b);
-        Assert.True(b.TryGetSuccess(out var act) && act == 7);
+        Assert.True(b.TryGetValue(out var act) && act == 7);
     }
 
     [Fact]
@@ -182,7 +182,7 @@ public class OptionalResultOfTTest {
         var r = new OptionalResult<int>(7);
         var b = r.If(7, static (v, a) => v == a);
         Assert.True(b);
-        Assert.True(b.TryGetSuccess(out var act) && act == 7);
+        Assert.True(b.TryGetValue(out var act) && act == 7);
     }
 
     [Fact]
@@ -198,7 +198,7 @@ public class OptionalResultOfTTest {
         var r = new OptionalResult<int>(7);
         var b = r.Map(6, (v, a) => (a * v).ToOptionalResult());
         Assert.True(b);
-        Assert.True(b.TryGetSuccess(out var act) && act == 42);
+        Assert.True(b.TryGetValue(out var act) && act == 42);
     }
 
     [Fact]
@@ -206,7 +206,7 @@ public class OptionalResultOfTTest {
         var r = new OptionalResult<int>(7);
         var b = r.Map((v) => (v * 6).ToOptionalResult());
         Assert.True(b);
-        Assert.True(b.TryGetSuccess(out var act) && act == 42);
+        Assert.True(b.TryGetValue(out var act) && act == 42);
     }
 
     [Fact]
@@ -250,7 +250,7 @@ public class OptionalResultOfTTest {
         var r = new OptionalResult<int>();
         var b = r.OrDefault(6, (a) => a * 7);
         Assert.True(b);
-        Assert.True(b.TryGetSuccess(out var act) && act == 42);
+        Assert.True(b.TryGetValue(out var act) && act == 42);
     }
 
     [Fact]
@@ -258,7 +258,7 @@ public class OptionalResultOfTTest {
         var r = new OptionalResult<int>(21);
         var b = r.OrDefault(6, (a) => a * 7);
         Assert.True(b);
-        Assert.True(b.TryGetSuccess(out var act) && act == 21);
+        Assert.True(b.TryGetValue(out var act) && act == 21);
     }
 
     [Fact]
@@ -277,7 +277,7 @@ public class OptionalResultOfTTest {
         var r = new OptionalResult<int>();
         var b = r.OrDefault(new OptionalResult<int>(42));
         Assert.True(b);
-        Assert.True(b.TryGetSuccess(out var act) && act == 42);
+        Assert.True(b.TryGetValue(out var act) && act == 42);
     }
 
     [Fact]
@@ -285,7 +285,7 @@ public class OptionalResultOfTTest {
         var r = new OptionalResult<int>(21);
         var b = r.OrDefault(new OptionalResult<int>(42));
         Assert.True(b);
-        Assert.True(b.TryGetSuccess(out var act) && act == 21);
+        Assert.True(b.TryGetValue(out var act) && act == 21);
     }
 
     [Fact]
@@ -303,7 +303,7 @@ public class OptionalResultOfTTest {
         var r = new OptionalResult<int>(21);
         var b = r.Try(1, static (v, a) => { return (v * a).AsOptionalResult(); });
         Assert.True(b);
-        Assert.True(b.TryGetSuccess(out var act) && act == 21);
+        Assert.True(b.TryGetValue(out var act) && act == 21);
     }
 
     [Fact]

@@ -5,7 +5,7 @@ public class Sample3ObjectResult {
     public void Sample3ObjectResult_01() {
         var act = DoSomething3(@"c:\");
 
-        Assert.True(act.TryGetSuccess(out var value));
+        Assert.True(act.TryGetValue(out var value));
         Assert.False(act.TryGetError(out var error));
         Assert.NotNull(value);
         Assert.Null(error.Exception);
@@ -15,7 +15,7 @@ public class Sample3ObjectResult {
     public void Sample3ObjectResult_02() {
         var act = DoSomething3(@"a:\");
 
-        Assert.False(act.TryGetSuccess(out var value));
+        Assert.False(act.TryGetValue(out var value));
         Assert.True(act.TryGetError(out var error));
         Assert.Null(value);
         Assert.NotNull(error.Exception);
@@ -25,7 +25,7 @@ public class Sample3ObjectResult {
     public void Sample3ObjectResult_03() {
         var act = DoSomething3(@"");
 
-        Assert.False(act.TryGetSuccess(out var value));
+        Assert.False(act.TryGetValue(out var value));
         Assert.False(act.TryGetError(out var error));
         Assert.True(act.TryGetNoValue());
         Assert.Null(value);
@@ -48,7 +48,7 @@ public class Sample3ObjectResult {
     private static OptionalResult<string> DoSomething3(string path) {
         var d = DoSomething3b(path);
         if (d.TryGetError(out var error, out var dopt)) { return error; }
-        if (!dopt.TryGetSuccess(out var cnt)) { return NoValue.Value; }
+        if (!dopt.TryGetValue(out var cnt)) { return NoValue.Value; }
         return cnt.ToString();
     }
 }

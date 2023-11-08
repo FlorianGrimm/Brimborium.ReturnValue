@@ -14,7 +14,7 @@ public static class OptionalResult {
         => new OptionalResult<T>(that);
 
     public static OptionalResult<T> If<T>(this OptionalResult<T> that, Func<T, bool> predicate) {
-        if (that.TryGetSuccess(out var v)) {
+        if (that.TryGetValue(out var v)) {
             if (predicate(v)) {
                 return that;
             }
@@ -25,7 +25,7 @@ public static class OptionalResult {
     }
 
     public static OptionalResult<T> If<T, A>(this OptionalResult<T> that, A args, Func<T, A, bool> predicate) {
-        if (that.TryGetSuccess(out var v)) {
+        if (that.TryGetValue(out var v)) {
             if (predicate(v, args)) {
                 return that;
             }
@@ -36,7 +36,7 @@ public static class OptionalResult {
     }
 
     public static OptionalResult<R> Map<T, R>(this OptionalResult<T> that, Func<T, OptionalResult<R>> predicate) {
-        if (that.TryGetSuccess(out var v)) {
+        if (that.TryGetValue(out var v)) {
             return predicate(v);
         } else if (that.TryGetError(out var error)) {
             return new OptionalResult<R>(error);
@@ -46,7 +46,7 @@ public static class OptionalResult {
     }
 
     public static OptionalResult<R> Map<T, A, R>(this OptionalResult<T> that, A args, Func<T, A, OptionalResult<R>> predicate) {
-        if (that.TryGetSuccess(out var v)) {
+        if (that.TryGetValue(out var v)) {
             return predicate(v, args);
         } else if (that.TryGetError(out var error)) {
             return new OptionalResult<R>(error);
@@ -56,7 +56,7 @@ public static class OptionalResult {
     }
 
     public static OptionalResult<T> OrDefault<T, A>(this OptionalResult<T> that, A args, Func<A, OptionalResult<T>> fnDefaultValue) {
-        if (that.TryGetSuccess(out var _)) {
+        if (that.TryGetValue(out var _)) {
             return that;
         } else if (that.TryGetError(out var error)) {
             return new OptionalResult<T>(error);
@@ -66,7 +66,7 @@ public static class OptionalResult {
     }
 
     public static OptionalResult<T> OrDefault<T>(this OptionalResult<T> that, OptionalResult<T> defaultValue) {
-        if (that.TryGetSuccess(out var _)) {
+        if (that.TryGetValue(out var _)) {
             return that;
         } else if (that.TryGetError(out var error)) {
             return new OptionalResult<T>(error);
@@ -78,7 +78,7 @@ public static class OptionalResult {
 
     public static OptionalResult<R> Try<T, A, R>(this OptionalResult<T> that, A args, Func<T, A, OptionalResult<R>> action) {
         try {
-            if (that.TryGetSuccess(out var v)) {
+            if (that.TryGetValue(out var v)) {
                 return action(v, args);
             } else if (that.TryGetError(out var error)) {
                 return new OptionalResult<R>(error);
@@ -120,7 +120,7 @@ public static class OptionalResult {
                 return onError(error, defaultValue);
             }
         }
-        if (opt.TryGetSuccess(out var value)) {
+        if (opt.TryGetValue(out var value)) {
             if (onSuccess is null) {
                 return defaultValue;
             } else {
@@ -151,7 +151,7 @@ public static class OptionalResult {
                 return onError(error, args, defaultValue);
             }
         }
-        if (that.TryGetSuccess(out var value)) {
+        if (that.TryGetValue(out var value)) {
             if (onSuccess is null) {
                 return defaultValue;
             } else {
