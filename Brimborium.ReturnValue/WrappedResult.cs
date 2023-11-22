@@ -1,4 +1,5 @@
-﻿//namespace Brimborium.ReturnValue;
+﻿
+namespace Brimborium.ReturnValue;
 
 //public interface IWrappedResult<T> {
 //    Result<bool> Result { get; }
@@ -16,8 +17,33 @@
 //    */
 //}
 
-//public interface IMeaning {
-//}
+public interface IMeaning<T> {
+    T Value { get; }
+}
 
-//public record struct FilePath(string Value) : IMeaning { 
-//}
+public interface IMeaningReference<T> : IMeaning<T> {
+    public bool TryGetValue([MaybeNullWhen(false)] out T value) {
+        value = this.Value;
+        return value is not null;
+    }
+}
+
+/*
+public partial record struct FilePath(string Value) : IMeaningReference<string> {
+    public bool TryGetValue([MaybeNullWhen(false)] out string value) {
+        value = this.Value;
+        return value is not null;
+    }
+}
+*/
+
+public partial record struct FilePath(string Value)
+    : IMeaning<string>
+    , IOptionalValue<string> {
+    public bool TryGetValue([MaybeNullWhen(false)] out string value) {
+        value = this.Value;
+        return value is not null;
+    }
+}
+
+/**/
