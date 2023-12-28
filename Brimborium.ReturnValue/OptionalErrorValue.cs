@@ -37,7 +37,7 @@ public record struct OptionalErrorValue(
         return new OptionalErrorValue(exception, exceptionDispatchInfo, false);
     }
 
-    public static Exception GetAndSetIsLogged(ref OptionalErrorValue that) {
+    public static Exception? GetAndSetIsLogged(ref OptionalErrorValue that) {
         that = that.WithIsLogged();
         return that.Exception;
     }

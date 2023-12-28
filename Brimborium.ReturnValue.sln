@@ -9,10 +9,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Brimborium.ReturnValue.Test
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6278F223-5382-4FE4-ADB4-7DC617B2EE6D}"
 	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brimborium.ReturnValue.Documentation", "Brimborium.ReturnValue.Documentation\Brimborium.ReturnValue.Documentation.csproj", "{C66CDF76-DC87-4DEA-8796-4E72DDA5DBDB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Brimborium.ReturnValue.Documentation", "Brimborium.ReturnValue.Documentation\Brimborium.ReturnValue.Documentation.csproj", "{C66CDF76-DC87-4DEA-8796-4E72DDA5DBDB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brimborium.Meaning.Sample", "Brimborium.Meaning.Sample\Brimborium.Meaning.Sample.csproj", "{2DA8AA7C-1F63-41D8-A3A2-A872680F50D6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brimborium.Meaning.Wrapped", "Brimborium.Meaning.Wrapped\Brimborium.Meaning.Wrapped.csproj", "{B1AF7188-ED84-448C-BE80-A2C1C92A9F9B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,8 +38,19 @@ Global
 		{C66CDF76-DC87-4DEA-8796-4E72DDA5DBDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C66CDF76-DC87-4DEA-8796-4E72DDA5DBDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C66CDF76-DC87-4DEA-8796-4E72DDA5DBDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DA8AA7C-1F63-41D8-A3A2-A872680F50D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DA8AA7C-1F63-41D8-A3A2-A872680F50D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DA8AA7C-1F63-41D8-A3A2-A872680F50D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DA8AA7C-1F63-41D8-A3A2-A872680F50D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1AF7188-ED84-448C-BE80-A2C1C92A9F9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1AF7188-ED84-448C-BE80-A2C1C92A9F9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1AF7188-ED84-448C-BE80-A2C1C92A9F9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1AF7188-ED84-448C-BE80-A2C1C92A9F9B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4F7E6C82-9D32-4866-9BE6-9A3F03092BC6}
 	EndGlobalSection
 EndGlobal

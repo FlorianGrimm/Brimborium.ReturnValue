@@ -71,6 +71,23 @@ public struct Result<T> {
         }
     }
 
+    public bool GetErrorOrValue([MaybeNullWhen(false)] out ErrorValue error, [MaybeNullWhen(true)] out T value) {
+        if (this.Mode == ResultMode.Success) {
+            error = default;
+            value = this.Value!;
+            return false;
+        } else if (this.Mode == ResultMode.Error) {
+            error = this.Error!;
+            value = default;
+            return true;
+        } else {
+            error = new ErrorValue(new NoValueAccessingException());
+            value = default;
+            return true;
+        }
+    }
+
+
     public Result<T> WithValue(T value) => new Result<T>(value);
 
     public Result<T> WithError(ErrorValue error) => new Result<T>(error);
