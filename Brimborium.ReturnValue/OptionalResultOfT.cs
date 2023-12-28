@@ -2,13 +2,18 @@
 
 public enum OptionalResultMode { NoValue, Success, Error }
 
-public struct OptionalResult<T> {
+public struct OptionalResult<T>
+    : IValue<T>
+    , IOptionalValueWithError<T, Optional<T>>
+    {
     [JsonInclude]
     public readonly OptionalResultMode Mode;
     [JsonInclude]
     [AllowNull] public readonly T Value;
     [JsonInclude]
     [AllowNull] public readonly ErrorValue Error;
+
+    T IValue<T>.Value => this.Value;
 
     public OptionalResult() {
         this.Mode = OptionalResultMode.NoValue;
@@ -78,7 +83,7 @@ public struct OptionalResult<T> {
         }
     }
 
-    public readonly bool TryGetSuccess([MaybeNullWhen(false)] out T value) {
+    public readonly bool TryGetValue([MaybeNullWhen(false)] out T value) {
         if (this.Mode == OptionalResultMode.Success) {
             value = this.Value!;
             return true;
@@ -99,7 +104,9 @@ public struct OptionalResult<T> {
         }
     }
 
-    public readonly bool TryGetError([MaybeNullWhen(false)] out ErrorValue error, [MaybeNullWhen(true)] out Optional<T> value) {
+    public readonly bool TryGetError(
+        [MaybeNullWhen(false)] out ErrorValue error, 
+        [MaybeNullWhen(true)] out Optional<T> value) {
         if (this.Mode == OptionalResultMode.Error) {
             error = this.Error!;
             value = default;
@@ -141,7 +148,7 @@ public struct OptionalResult<T> {
     public static implicit operator OptionalResult<T>(ErrorValue error) => new OptionalResult<T>(error);
 
     public static implicit operator OptionalResult<T>(Result<T> value) {
-        if (value.TryGetSuccess(out var successValue)) {
+        if (value.TryGetValue(out var successValue)) {
             return new OptionalResult<T>(successValue);
         } else if (value.TryGetError(out var errorValue)) {
             return new OptionalResult<T>(errorValue);

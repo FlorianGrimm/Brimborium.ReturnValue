@@ -6,7 +6,7 @@ public class OptionalTest {
         Assert.Equal(OptionalMode.NoValue, o.Mode);
 
         Assert.True(o.TryGetNoValue());
-        Assert.False(o.TryGetSuccess(out var result));
+        Assert.False(o.TryGetValue(out var result));
     }
 
 
@@ -17,7 +17,7 @@ public class OptionalTest {
 
         Assert.False(o.TryGetNoValue());
         {
-            Assert.True(o.TryGetSuccess(out var result));
+            Assert.True(o.TryGetValue(out var result));
             Assert.Equal(42, result);
         }
     }

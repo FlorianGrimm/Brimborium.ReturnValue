@@ -15,3 +15,9 @@ public sealed class NoValueAccessingException : Exception
     public NoValueAccessingException() : base("NoValueAccessing") { }
     private NoValueAccessingException(SerializationInfo info, StreamingContext context) : base(info, context) { }
 }
+
+[Serializable]
+public sealed class InvalidCaseException : Exception {
+    public InvalidCaseException() : base("InvalidCase") { }
+    private InvalidCaseException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+}

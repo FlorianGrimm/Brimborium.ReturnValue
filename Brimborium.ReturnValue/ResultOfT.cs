@@ -51,7 +51,7 @@ public struct Result<T> {
         }
     }
 
-    public bool TryGetSuccess([MaybeNullWhen(false)] out T value) {
+    public bool TryGetValue([MaybeNullWhen(false)] out T value) {
         if (this.Mode == ResultMode.Success) {
             value = this.Value!;
             return true;
@@ -67,6 +67,20 @@ public struct Result<T> {
             return true;
         } else {
             error = default;
+            return false;
+        }
+    }
+
+    public bool TryGetError(
+        [MaybeNullWhen(false)] out ErrorValue error,
+        [MaybeNullWhen(true)] out SuccessValue<T> value) {
+        if (this.Mode == ResultMode.Error) {
+            error = this.Error!;
+            value = default;
+            return true;
+        } else {
+            error = default;
+            value = new SuccessValue<T>(this.Value!);
             return false;
         }
     }

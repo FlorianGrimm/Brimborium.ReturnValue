@@ -5,7 +5,7 @@ public class Sample4ObjectResult {
     public void Sample4ObjectResult_01() {
         var act = DoSomething4(@"c:\");
 
-        Assert.True(act.TryGetSuccess(out var value));
+        Assert.True(act.TryGetValue(out var value));
         Assert.False(act.TryGetError(out var error));
         Assert.NotNull(value);
         Assert.Null(error.Exception);
@@ -15,7 +15,7 @@ public class Sample4ObjectResult {
     public void Sample4ObjectResult_02() {
         var act = DoSomething4(@"a:\");
 
-        Assert.False(act.TryGetSuccess(out var value));
+        Assert.False(act.TryGetValue(out var value));
         Assert.True(act.TryGetError(out var error));
         Assert.Null(value);
         Assert.NotNull(error.Exception);
@@ -25,7 +25,7 @@ public class Sample4ObjectResult {
     public void Sample4ObjectResult_03() {
         var act = DoSomething4(@"");
 
-        Assert.False(act.TryGetSuccess(out var value));
+        Assert.False(act.TryGetValue(out var value));
         Assert.False(act.TryGetError(out var error));
         Assert.True(act.TryGetNoValue());
         Assert.Null(value);

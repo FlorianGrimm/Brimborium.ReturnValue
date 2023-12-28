@@ -19,40 +19,40 @@ public class ResultTest {
         Result<int> result11 = result10.WithValue(value);
         Result<int> result12 = result11.WithError(error);
 
-        Assert.True(result01.TryGetSuccess(out var value01));
+        Assert.True(result01.TryGetValue(out var value01));
         Assert.False(result01.TryGetError(out var error01));
         Assert.Equal(value, value01);
-        Assert.True(result02.TryGetSuccess(out var value02));
+        Assert.True(result02.TryGetValue(out var value02));
         Assert.False(result02.TryGetError(out var error02));
         Assert.Equal(value, value02);
-        Assert.True(result03.TryGetSuccess(out var value03));
+        Assert.True(result03.TryGetValue(out var value03));
         Assert.False(result03.TryGetError(out var error03));
         Assert.Equal(value, value03);
-        Assert.False(result04.TryGetSuccess(out var value04));
+        Assert.False(result04.TryGetValue(out var value04));
         Assert.True(result04.TryGetError(out var error04));
         Assert.Equal(error, error04);
-        Assert.True(result05.TryGetSuccess(out var value05));
+        Assert.True(result05.TryGetValue(out var value05));
         Assert.False(result05.TryGetError(out var error05));
         Assert.Equal(value, value05);
-        Assert.False(result06.TryGetSuccess(out var value06));
+        Assert.False(result06.TryGetValue(out var value06));
         Assert.True(result06.TryGetError(out var error06));
         Assert.Equal(error, error06);
-        Assert.True(result07.TryGetSuccess(out var value07));
+        Assert.True(result07.TryGetValue(out var value07));
         Assert.False(result07.TryGetError(out var error07));
         Assert.Equal(value, value07);
-        Assert.False(result08.TryGetSuccess(out var value08));
+        Assert.False(result08.TryGetValue(out var value08));
         Assert.True(result08.TryGetError(out var error08));
         Assert.Equal(error, error08);
-        Assert.True(result09.TryGetSuccess(out var value09));
+        Assert.True(result09.TryGetValue(out var value09));
         Assert.False(result09.TryGetError(out var error09));
         Assert.Equal(value, value09);
-        Assert.False(result10.TryGetSuccess(out var value10));
+        Assert.False(result10.TryGetValue(out var value10));
         Assert.True(result10.TryGetError(out var error10));
         Assert.Equal(error, error10);
-        Assert.True(result11.TryGetSuccess(out var value11));
+        Assert.True(result11.TryGetValue(out var value11));
         Assert.False(result11.TryGetError(out var error11));
         Assert.Equal(value, value11);
-        Assert.False(result12.TryGetSuccess(out var value12));
+        Assert.False(result12.TryGetValue(out var value12));
         Assert.True(result12.TryGetError(out var error12));
         Assert.Equal(error, error12);
     }
@@ -76,16 +76,16 @@ public class ResultTest {
 
         Assert.Equal(OptionalResultMode.NoValue, result01.Mode);
         Assert.Equal(OptionalResultMode.Success, result02.Mode);
-        Assert.True(result02.TryGetSuccess(out var value02));
+        Assert.True(result02.TryGetValue(out var value02));
         Assert.Equal(value, value02);
         Assert.Equal(OptionalResultMode.Success, result03.Mode);
-        Assert.True(result03.TryGetSuccess(out var value03));
+        Assert.True(result03.TryGetValue(out var value03));
         Assert.Equal(value, value03);
         Assert.Equal(OptionalResultMode.Error, result04.Mode);
         Assert.True(result04.TryGetError(out var error04));
         Assert.Equal(error, error04);
         Assert.Equal(OptionalResultMode.Success, result05.Mode);
-        Assert.True(result05.TryGetSuccess(out var value05));
+        Assert.True(result05.TryGetValue(out var value05));
         Assert.Equal(value, value05);
         Assert.Equal(OptionalResultMode.Error, result06.Mode);
         Assert.True(result06.TryGetError(out var error06));
@@ -97,10 +97,10 @@ public class ResultTest {
         Assert.True(result08.TryGetError(out var error08));
         Assert.Equal(error, error08);
         Assert.Equal(OptionalResultMode.Success, result09.Mode);
-        Assert.True(result09.TryGetSuccess(out var value09));
+        Assert.True(result09.TryGetValue(out var value09));
         Assert.Equal(value, value09);
         Assert.Equal(OptionalResultMode.Success, result10.Mode);
-        Assert.True(result10.TryGetSuccess(out var value10));
+        Assert.True(result10.TryGetValue(out var value10));
         Assert.Equal(value, value10);
     }
 

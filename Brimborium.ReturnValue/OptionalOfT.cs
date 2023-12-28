@@ -3,6 +3,7 @@ namespace Brimborium.ReturnValue;
 public enum OptionalMode { NoValue, Success }
 
 public readonly struct Optional<T>
+    :IOptionalValue<T>
 {
     [JsonInclude]
     public readonly OptionalMode Mode;
@@ -52,7 +53,7 @@ public readonly struct Optional<T>
         return (this.Mode == OptionalMode.NoValue);
     }
 
-    public bool TryGetSuccess([MaybeNullWhen(false)] out T value)
+    public bool TryGetValue([MaybeNullWhen(false)] out T value)
     {
         if (this.Mode == OptionalMode.NoValue)
         {
@@ -69,6 +70,7 @@ public readonly struct Optional<T>
         => (this.Mode == OptionalMode.NoValue)
         ? defaultValue
         : this.Value!;
+
 
 #pragma warning disable IDE0060 // Remove unused parameter
     public static implicit operator Optional<T>(NoValue value) => new Optional<T>();
